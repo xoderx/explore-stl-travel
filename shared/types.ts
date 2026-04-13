@@ -39,6 +39,8 @@ export interface Listing {
   featured?: boolean;
   district: District;
   isBlackOwned?: boolean;
+  isSponsored?: boolean;
+  sponsoredTagline?: string;
 }
 export interface Event {
   id: string;
@@ -64,6 +66,12 @@ export interface Review {
   date: string;
   avatarUrl?: string;
 }
+export interface ReviewInput {
+  listingId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+}
 export interface Transaction {
   id: string;
   userId: string;
@@ -71,6 +79,11 @@ export interface Transaction {
   amount: number;
   description: string;
   timestamp: string;
+}
+export interface CheckInInput {
+  userId: string;
+  listingId: string;
+  listingName: string;
 }
 export interface DashboardMetric {
   label: string;

@@ -30,7 +30,11 @@ export class ListingEntity extends IndexedEntity<Listing> {
   static readonly entityName = "listing";
   static readonly indexName = "listings";
   static readonly initialState: Listing = { id: "", name: "", category: "Attractions", description: "", imageUrl: "", rating: 0, priceLevel: 1, address: "", aiSummary: "", district: 'stl' };
-  static seedData = MOCK_LISTINGS;
+  static seedData = MOCK_LISTINGS.map(l => ({
+    ...l,
+    isSponsored: l.id === 'l8' || l.id === 'l12',
+    sponsoredTagline: l.id === 'l8' ? 'Premium Whiskey Flights' : (l.id === 'l12' ? 'Luxury Rooftop Experience' : undefined)
+  }));
 }
 export class EventEntity extends IndexedEntity<Event> {
   static readonly entityName = "event";
@@ -63,6 +67,33 @@ export class UserCardEntity extends IndexedEntity<UserCard & { id: string }> {
     await this.mutate(s => ({
       ...s,
       points: s.points - amount,
+      transactions: [transaction, ...s.transactions]
+    }));
+    return transaction;
+  }
+  async checkIn(listingId: string, listingName: string): Promise<Transaction> {
+    const state = await this.getState();
+    const today = new Date().toISOString().split('T')[0];
+    const alreadyCheckedIn = state.transactions.some(t => 
+      t.type === 'Check-in' && 
+      t.description.includes(listingName) && 
+      t.timestamp.startsWith(today)
+    );
+    if (alreadyCheckedIn) {
+      throw new Error("Already checked in today at this venue");
+    }
+    const pointsEarned = 50;
+    const transaction: Transaction = {
+      id: crypto.randomUUID(),
+      userId: state.userId,
+      type: 'Check-in',
+      amount: pointsEarned,
+      description: `Check-in at ${listingName}`,
+      timestamp: new Date().toISOString()
+    };
+    await this.mutate(s => ({
+      ...s,
+      points: s.points + pointsEarned,
       transactions: [transaction, ...s.transactions]
     }));
     return transaction;
