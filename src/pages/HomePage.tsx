@@ -7,6 +7,7 @@ import { DistrictModules } from '@/components/special/DistrictModules';
 import { useDistrictStore } from '@/store/use-district-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { HeroOS } from '@/components/home/HeroOS';
 import { ActivityFeed } from '@/components/home/ActivityFeed';
 import { ExperienceGenerator } from '@/components/home/ExperienceGenerator';
@@ -56,7 +57,6 @@ export function HomePage() {
       </div>
       <ActivityFeed />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-24">
-        {/* Featured Partnerships */}
         <section className="space-y-8">
           <div className="flex justify-between items-end">
             <div>
@@ -66,11 +66,10 @@ export function HomePage() {
             <Badge variant="outline" className="border-orange-500/30 text-orange-500 font-bold uppercase tracking-widest text-[10px] px-3">Sponsored</Badge>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="aspect-video rounded-3xl" />) 
+            {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="aspect-video rounded-3xl" />)
             : sponsoredListings?.map(l => <ListingCard key={l.id} listing={l} />)}
           </div>
         </section>
-        {/* Experience Engine */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-5xl font-display font-bold leading-tight">
@@ -87,7 +86,6 @@ export function HomePage() {
           </div>
           <ExperienceGenerator />
         </section>
-        {/* District View */}
         <section className="space-y-8">
           <div className="flex justify-between items-end">
             <h3 className="text-3xl font-display font-bold uppercase tracking-tighter italic">The {currentDistrict} View</h3>
@@ -99,7 +97,6 @@ export function HomePage() {
         </section>
         <ImpactPreview />
         <SocialFeed />
-        {/* Local Feed */}
         <section className="space-y-8">
           <div className="flex justify-between items-end">
             <h3 className="text-3xl font-display font-bold">Featured Experiences</h3>
@@ -110,7 +107,6 @@ export function HomePage() {
             : filteredListings?.filter(l => l.featured && !l.isSponsored).map(l => <ListingCard key={l.id} listing={l} />)}
           </div>
         </section>
-        {/* Claim Listing Modal Logic */}
         <section className="bg-secondary/30 rounded-[3rem] p-8 md:p-16 border border-border/50 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6">
             <h3 className="text-4xl font-display font-bold">Partner with the OS.</h3>
@@ -118,7 +114,7 @@ export function HomePage() {
               Join 400+ venues using the STL OS to drive traffic, track ROI, and reward loyal customers.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button 
+              <Button
                 className="rounded-2xl h-14 px-10 font-black bg-orange-500 hover:bg-orange-600 shadow-glow"
                 onClick={() => setClaimVenue("General Inquiry")}
               >

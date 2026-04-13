@@ -22,6 +22,7 @@ export function ROIDashboardPage() {
       </div>
     );
   }
+  const footTrafficTotal = impactData?.footTraffic?.reduce((acc: number, curr: any) => acc + (curr.count || 0), 0) ?? 0;
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
       <div className="py-8 md:py-10 lg:py-12 space-y-8 animate-fade-in">
@@ -42,10 +43,10 @@ export function ROIDashboardPage() {
         </header>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Spend Generated', value: `${impactData?.spendGenerated?.toLocaleString() || '0'}`, icon: Wallet, color: 'text-emerald-500', change: '+12%' },
-            { label: 'Foot Traffic', value: impactData?.footTraffic?.reduce((acc: number, curr: any) => acc + curr.count, 0).toLocaleString() || '0', icon: Users, color: 'text-blue-500', change: '+8%' },
-            { label: 'Verified Venues', value: impactData?.businessesSupported || 0, icon: Target, color: 'text-amber-500', change: 'Live' },
-            { label: 'Active Deals', value: impactData?.activeRewards || 0, icon: TrendingUp, color: 'text-purple-500', change: '+5' },
+            { label: 'Spend Generated', value: `$${impactData?.spendGenerated?.toLocaleString() ?? '0'}`, icon: Wallet, color: 'text-emerald-500', change: '+12%' },
+            { label: 'Foot Traffic', value: footTrafficTotal.toLocaleString(), icon: Users, color: 'text-blue-500', change: '+8%' },
+            { label: 'Verified Venues', value: impactData?.businessesSupported ?? 0, icon: Target, color: 'text-amber-500', change: 'Live' },
+            { label: 'Active Deals', value: impactData?.activeRewards ?? 0, icon: TrendingUp, color: 'text-purple-500', change: '+5' },
           ].map((stat, i) => (
             <Card key={i} className="border-none shadow-soft bg-secondary/20 rounded-3xl group hover:bg-secondary/40 transition-colors">
               <CardContent className="p-6">

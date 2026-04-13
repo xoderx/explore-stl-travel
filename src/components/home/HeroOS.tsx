@@ -4,6 +4,7 @@ import { Search, Sparkles, Map, Gift, TrendingUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/tracking';
+import { cn } from '@/lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 const subheadlines = [
   "Plan your perfect night out.",
