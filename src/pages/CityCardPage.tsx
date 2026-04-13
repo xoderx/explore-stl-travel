@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Crown, Gift, History, ChevronRight, Info, ChevronDown } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Crown, Gift, History, ChevronRight, Info, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import type { UserCard } from '@shared/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QRCodeSVG } from 'qrcode.react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 export function CityCardPage() {
   const [showHistory, setShowHistory] = useState(false);
+  const queryClient = useQueryClient();
   const { data: card, isLoading } = useQuery({
     queryKey: ['card', 'u1'],
     queryFn: () => api<UserCard & { id: string }>('/api/card/u1'),
   });
-  const transactions = [
-    { id: 1, title: 'Check-in: Sugarfire', points: '+50', date: '2 hours ago' },
-    { id: 2, title: 'Redeemed: Toasted Ravs', points: '-500', date: 'Yesterday' },
-    { id: 3, title: 'Check-in: Gateway Arch', points: '+100', date: 'Oct 24' },
+  const redeemMutation = useMutation({
+    mutationFn: (args: { amount: number, description: string }) => 
+      api('/api/card/redeem', {
+        method: 'POST',
+        body: JSON.stringify({ userId: 'u1', ...args })
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['card', 'u1'] });
+      toast.success("Reward redeemed successfully!");
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Redemption failed");
+    }
+  });
+  const rewards = [
+    { id: 'r1', title: 'Free Toasted Ravioli', venue: 'Sugarfire Smokehouse', cost: 500 },
+    { id: 'r2', title: '50% Off Arch Tram', venue: 'Gateway Arch', cost: 1200 },
+    { id: 'r3', title: 'BOGO Cocktail', venue: "Brennan's", cost: 800 },
   ];
   return (
     <div className="space-y-10 animate-fade-in max-w-2xl mx-auto">
@@ -42,10 +60,10 @@ export function CityCardPage() {
               <div className="flex flex-col items-center gap-4">
                 <div className="bg-white p-2.5 rounded-2xl shadow-xl transition-transform group-hover:scale-110">
                   {card?.cardNumber && (
-                    <QRCodeSVG 
-                      value={card.cardNumber} 
-                      size={100} 
-                      level="H" 
+                    <QRCodeSVG
+                      value={card.cardNumber}
+                      size={100}
+                      level="H"
                       includeMargin={false}
                     />
                   )}
@@ -61,7 +79,7 @@ export function CityCardPage() {
                 </div>
                 <div className="text-right flex flex-col items-end">
                   <p className="text-[10px] text-white/50 uppercase tracking-[0.2em] mb-1 font-bold">Balance</p>
-                  <p className="font-bold text-2xl text-orange-400">{card?.points.toLocaleString()} <span className="text-xs opacity-60">PTS</span></p>
+                  <p className="font-bold text-2xl text-orange-400">{card?.points?.toLocaleString()} <span className="text-xs opacity-60">PTS</span></p>
                 </div>
               </div>
             </div>
@@ -77,11 +95,8 @@ export function CityCardPage() {
           <Badge variant="outline" className="text-muted-foreground border-border/50">Exclusive for {card?.tier}</Badge>
         </div>
         <div className="space-y-3">
-          {[
-            { title: 'Free Toasted Ravioli', venue: 'Sugarfire Smokehouse', cost: 500, color: 'text-orange-600' },
-            { title: '50% Off Arch Tram', venue: 'Gateway Arch', cost: 1200, color: 'text-blue-600' },
-          ].map((reward, i) => (
-            <Card key={i} className="border border-border/40 bg-secondary/20 hover:bg-secondary/40 transition-all cursor-pointer group rounded-2xl overflow-hidden">
+          {rewards.map((reward) => (
+            <Card key={reward.id} className="border border-border/40 bg-secondary/20 hover:bg-secondary/40 transition-all group rounded-2xl overflow-hidden">
               <CardContent className="p-4 flex justify-between items-center">
                 <div className="space-y-1">
                   <h4 className="font-bold text-sm group-hover:text-orange-500 transition-colors">{reward.title}</h4>
@@ -91,7 +106,14 @@ export function CityCardPage() {
                   <Badge variant="secondary" className="bg-white/50 dark:bg-black/50 font-bold border-none">
                     {reward.cost} PTS
                   </Badge>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  <Button 
+                    size="sm" 
+                    className="rounded-xl h-8 bg-orange-500 hover:bg-orange-600 text-xs font-bold"
+                    disabled={redeemMutation.isPending || (card?.points || 0) < reward.cost}
+                    onClick={() => redeemMutation.mutate({ amount: reward.cost, description: reward.title })}
+                  >
+                    Redeem
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -102,27 +124,36 @@ export function CityCardPage() {
         <div className="flex justify-between items-center cursor-pointer group" onClick={() => setShowHistory(!showHistory)}>
           <h3 className="text-xl font-bold flex items-center gap-2">
             <History className="w-5 h-5 text-blue-500" />
-            Recent Activity
+            Transaction History
           </h3>
           <ChevronDown className={cn("w-5 h-5 text-muted-foreground transition-transform duration-300", showHistory ? "rotate-180" : "")} />
         </div>
         {showHistory ? (
           <div className="space-y-1 animate-slide-up">
-            {transactions.map((tx) => (
-              <div key={tx.id} className="flex justify-between items-center p-4 rounded-xl hover:bg-secondary/30 transition-colors">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold">{tx.title}</p>
-                  <p className="text-[10px] text-muted-foreground uppercase">{tx.date}</p>
+            {card?.transactions?.length ? (
+              card.transactions.map((tx) => (
+                <div key={tx.id} className="flex justify-between items-center p-4 rounded-xl hover:bg-secondary/30 transition-colors">
+                  <div className="flex gap-3 items-center">
+                    <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-orange-500/10 text-orange-600")}>
+                      {tx.amount > 0 ? <CheckCircle2 className="w-4 h-4" /> : <Gift className="w-4 h-4" />}
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-bold">{tx.description}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase">{format(new Date(tx.timestamp), 'MMM d, h:mm a')}</p>
+                    </div>
+                  </div>
+                  <p className={cn("font-mono font-bold", tx.amount > 0 ? "text-green-500" : "text-orange-500")}>
+                    {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
+                  </p>
                 </div>
-                <p className={cn("font-mono font-bold", tx.points.startsWith('+') ? "text-green-500" : "text-orange-500")}>
-                  {tx.points}
-                </p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="p-12 text-center text-muted-foreground italic text-sm">No transactions yet. Visit some venues to earn points!</div>
+            )}
           </div>
         ) : (
           <div className="p-8 bg-secondary/20 rounded-2xl border border-dashed text-center">
-            <p className="text-sm text-muted-foreground italic">Tap balance or 'Recent Activity' to see history.</p>
+            <p className="text-sm text-muted-foreground italic">Tap 'Transaction History' to view your wallet activity.</p>
           </div>
         )}
       </section>

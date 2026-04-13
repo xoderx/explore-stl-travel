@@ -48,10 +48,27 @@ export interface Event {
   isConvention?: boolean;
   impactScore?: number;
 }
+export interface Review {
+  id: string;
+  listingId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  date: string;
+  avatarUrl?: string;
+}
+export interface Transaction {
+  id: string;
+  userId: string;
+  type: 'Redemption' | 'Bonus' | 'Reward' | 'Check-in';
+  amount: number;
+  description: string;
+  timestamp: string;
+}
 export interface DashboardMetric {
   label: string;
   value: string | number;
-  change: number;
+  change: string;
   trend: 'up' | 'down' | 'neutral';
 }
 export interface DistrictImpact {
@@ -76,4 +93,5 @@ export interface UserCard {
   points: number;
   tier: 'Silver' | 'Gold' | 'Platinum';
   joinedDate: string;
+  transactions: Transaction[];
 }

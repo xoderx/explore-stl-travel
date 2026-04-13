@@ -1,4 +1,4 @@
-import type { User, Chat, ChatMessage, Listing, Event, UserCard, DistrictImpact } from './types';
+import type { User, Chat, ChatMessage, Listing, Event, UserCard, DistrictImpact, Review, Transaction } from './types';
 export const MOCK_USERS: User[] = [
   { id: 'u1', name: 'User A' },
   { id: 'u2', name: 'User B' }
@@ -130,12 +130,21 @@ export const MOCK_EVENTS: Event[] = [
     impactScore: 95
   }
 ];
+export const MOCK_REVIEWS: Review[] = [
+  { id: 'r1', listingId: 'l14', userName: 'StL Foodie', rating: 5, comment: 'The catfish is actually life-changing. Best spot in Ferguson!', date: 'Oct 2, 2024' },
+  { id: 'r2', listingId: 'l1', userName: 'TravelerX', rating: 4, comment: 'The views are great, but the wait for the tram was long.', date: 'Oct 15, 2024' },
+  { id: 'r3', listingId: 'l8', userName: 'NightOwl', rating: 5, comment: 'Incredible cigar selection and very refined atmosphere.', date: 'Oct 18, 2024' },
+];
 export const MOCK_USER_CARD: UserCard = {
   userId: 'u1',
   cardNumber: '314-800-4567',
-  points: 1250,
+  points: 3500,
   tier: 'Gold',
-  joinedDate: '2023-11-10'
+  joinedDate: '2023-11-10',
+  transactions: [
+    { id: 't1', userId: 'u1', type: 'Bonus', amount: 1000, description: 'Welcome Reward', timestamp: '2023-11-10T12:00:00Z' },
+    { id: 't2', userId: 'u1', type: 'Check-in', amount: 50, description: 'Cathy\'s Kitchen Visit', timestamp: '2024-10-02T18:30:00Z' },
+  ]
 };
 export const MOCK_ROI_DATA: DistrictImpact[] = [
   {
