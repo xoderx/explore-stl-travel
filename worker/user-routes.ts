@@ -9,11 +9,23 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     const page = await ListingEntity.list(c.env);
     return ok(c, page.items);
   });
+  app.get('/api/listings/:id', async (c) => {
+    const id = c.req.param('id');
+    const entity = new ListingEntity(c.env, id);
+    if (!await entity.exists()) return notFound(c, 'Listing not found');
+    return ok(c, await entity.getState());
+  });
   // EVENTS
   app.get('/api/events', async (c) => {
     await EventEntity.ensureSeed(c.env);
     const page = await EventEntity.list(c.env);
     return ok(c, page.items);
+  });
+  app.get('/api/events/:id', async (c) => {
+    const id = c.req.param('id');
+    const entity = new EventEntity(c.env, id);
+    if (!await entity.exists()) return notFound(c, 'Event not found');
+    return ok(c, await entity.getState());
   });
   // USER CARD
   app.get('/api/card/:userId', async (c) => {
