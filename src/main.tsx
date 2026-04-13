@@ -12,17 +12,39 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import '@/index.css'
 import { HomePage } from '@/pages/HomePage'
-
+import { DirectoryPage } from '@/pages/DirectoryPage'
+import { ConciergePage } from '@/pages/ConciergePage'
+import { CityCardPage } from '@/pages/CityCardPage'
+import { EventsPage } from '@/pages/EventsPage'
+import { AppLayout } from '@/components/layout/AppLayout'
 const queryClient = new QueryClient();
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <AppLayout container><HomePage /></AppLayout>,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/directory",
+    element: <AppLayout container><DirectoryPage /></AppLayout>,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/concierge",
+    element: <AppLayout><ConciergePage /></AppLayout>,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/card",
+    element: <AppLayout container><CityCardPage /></AppLayout>,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/events",
+    element: <AppLayout container><EventsPage /></AppLayout>,
     errorElement: <RouteErrorBoundary />,
   },
 ]);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -32,4 +54,3 @@ createRoot(document.getElementById('root')!).render(
     </QueryClientProvider>
   </StrictMode>,
 )
-   

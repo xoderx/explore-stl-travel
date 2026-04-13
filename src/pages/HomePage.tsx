@@ -1,138 +1,76 @@
-// Home page of the app.
-// Currently a demo placeholder "please wait" screen.
-// Replace this file with your actual app UI. Do not delete it to use some other file as homepage. Simply replace the entire contents of this file.
-
-import { useEffect, useMemo, useState } from 'react'
-import { Sparkles } from 'lucide-react'
-
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { HAS_TEMPLATE_DEMO, TemplateDemo } from '@/components/TemplateDemo'
-import { Button } from '@/components/ui/button'
-import { Toaster, toast } from '@/components/ui/sonner'
-
-function formatDuration(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000))
-  const m = Math.floor(total / 60)
-  const s = total % 60
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Sparkles, Utensils, Landmark, Music, Trees } from 'lucide-react';
+import { api } from '@/lib/api-client';
+import type { Listing } from '@shared/types';
+import { ListingCard } from '@/components/shared/ListingCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+const categories = [
+  { name: 'Food', icon: Utensils, color: 'bg-orange-500' },
+  { name: 'Attractions', icon: Landmark, color: 'bg-blue-500' },
+  { name: 'Nightlife', icon: Music, color: 'bg-purple-500' },
+  { name: 'Parks', icon: Trees, color: 'bg-green-500' },
+];
 export function HomePage() {
-  const [coins, setCoins] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
-  const [startedAt, setStartedAt] = useState<number | null>(null)
-  const [elapsedMs, setElapsedMs] = useState(0)
-
-  useEffect(() => {
-    if (!isRunning || startedAt === null) return
-
-    const t = setInterval(() => {
-      setElapsedMs(Date.now() - startedAt)
-    }, 250)
-
-    return () => clearInterval(t)
-  }, [isRunning, startedAt])
-
-  const formatted = useMemo(() => formatDuration(elapsedMs), [elapsedMs])
-
-  const onPleaseWait = () => {
-    setCoins((c) => c + 1)
-
-    if (!isRunning) {
-      // Resume from the current elapsed time
-      setStartedAt(Date.now() - elapsedMs)
-      setIsRunning(true)
-      toast.success('Building your app…', {
-        description: "Hang tight — we're setting everything up.",
-      })
-      return
-    }
-
-    setIsRunning(false)
-    toast.info('Still working…', {
-      description: 'You can come back in a moment.',
-    })
-  }
-
-  const onReset = () => {
-    setCoins(0)
-    setIsRunning(false)
-    setStartedAt(null)
-    setElapsedMs(0)
-    toast('Reset complete')
-  }
-
-  const onAddCoin = () => {
-    setCoins((c) => c + 1)
-    toast('Coin added')
-  }
-
+  const { data: listings, isLoading } = useQuery({
+    queryKey: ['listings'],
+    queryFn: () => api<Listing[]>('/api/listings'),
+  });
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4 overflow-hidden relative">
-      <ThemeToggle />
-      <div className="absolute inset-0 bg-gradient-rainbow opacity-10 dark:opacity-20 pointer-events-none" />
-
-      <div className="text-center space-y-8 relative z-10 animate-fade-in w-full">
-        <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-primary floating">
-            <Sparkles className="w-8 h-8 text-white rotating" />
-          </div>
+    <div className="space-y-10 animate-fade-in">
+      <section className="space-y-4">
+        <div className="space-y-2">
+          <h2 className="text-xs font-bold tracking-[0.2em] text-orange-500 uppercase">Gateway to Adventure</h2>
+          <h1 className="text-4xl md:text-6xl font-display font-bold">Explore <span className="text-gradient">St. Louis</span></h1>
+          <p className="text-muted-foreground max-w-lg">Discover the best of the 314 with your personal Travel OS.</p>
         </div>
-
-        <div className="space-y-3">
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-balance leading-tight">
-            Creating your <span className="text-gradient">app</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto text-pretty">
-            Your application would be ready soon.
-          </p>
+      </section>
+      <section>
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+          {categories.map((cat) => (
+            <div key={cat.name} className="flex-shrink-0 flex flex-col items-center gap-2 group cursor-pointer">
+              <div className={`${cat.color} w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-110 group-active:scale-95`}>
+                <cat.icon className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-semibold">{cat.name}</span>
+            </div>
+          ))}
         </div>
-
-        {HAS_TEMPLATE_DEMO ? (
-          <div className="max-w-5xl mx-auto text-left">
-            <TemplateDemo />
+      </section>
+      <section className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+        <Sparkles className="absolute top-[-20px] right-[-20px] w-32 h-32 opacity-10 group-hover:scale-110 transition-transform" />
+        <div className="relative z-10 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-2xl font-bold">Unlock 314 Deals</h3>
+            <p className="text-orange-100 text-sm max-w-xs">Scan your City Card at any partner venue to earn points and exclusive discounts.</p>
           </div>
-        ) : (
-          <>
-            <div className="flex justify-center gap-4">
-              <Button
-                size="lg"
-                onClick={onPleaseWait}
-                className="btn-gradient px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200"
-                aria-live="polite"
-              >
-                Please Wait
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div>
-                Time elapsed:{' '}
-                <span className="font-medium tabular-nums text-foreground">{formatted}</span>
+          <Button variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50 border-none font-bold rounded-xl">
+            View My Wallet
+          </Button>
+        </div>
+      </section>
+      <section className="space-y-6">
+        <div className="flex justify-between items-end">
+          <h3 className="text-2xl font-bold">Featured Experiences</h3>
+          <Button variant="link" className="text-orange-500 p-0 h-auto font-bold">See all</Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading ? (
+            Array(3).fill(0).map((_, i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="aspect-video w-full rounded-2xl" />
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
               </div>
-              <div>
-                Coins:{' '}
-                <span className="font-medium tabular-nums text-foreground">{coins}</span>
-              </div>
-            </div>
-
-            <div className="flex justify-center gap-2">
-              <Button variant="outline" size="sm" onClick={onReset}>
-                Reset
-              </Button>
-              <Button variant="outline" size="sm" onClick={onAddCoin}>
-                Add Coin
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-
-      <footer className="absolute bottom-8 text-center text-muted-foreground/80">
-        <p>Powered by Cloudflare</p>
-      </footer>
-
-      <Toaster richColors closeButton />
+            ))
+          ) : (
+            listings?.filter(l => l.featured).map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))
+          )}
+        </div>
+      </section>
     </div>
-  )
+  );
 }
