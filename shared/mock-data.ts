@@ -63,6 +63,45 @@ export const MOCK_LISTINGS: Listing[] = [
     district: 'downtown'
   },
   {
+    id: 'l17',
+    name: 'The Pageant',
+    category: 'Nightlife',
+    description: 'Legendary live music venue hosting national acts and local talent.',
+    imageUrl: 'https://images.unsplash.com/photo-1540031982925-bfbbe182f50f?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.9,
+    priceLevel: 2,
+    address: '4253 Delmar Blvd, St. Louis, MO 63108',
+    aiSummary: 'Legendary live music venue hosting national acts and local talent.',
+    featured: true,
+    district: 'delmar'
+  },
+  {
+    id: 'l18',
+    name: 'Blueberry Hill',
+    category: 'Food',
+    description: 'Iconic diner, bar, and music spot owned by Chuck Berry family.',
+    imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.8,
+    priceLevel: 2,
+    address: '6504 Delmar Blvd, St. Louis, MO 63130',
+    aiSummary: 'Iconic diner, bar, and music spot owned by Chuck Berry family.',
+    featured: true,
+    district: 'delmar'
+  },
+  {
+    id: 'l19',
+    name: 'The Moonrise Rooftop',
+    category: 'Nightlife',
+    description: 'Stunning rooftop bar with skyline views and DJ nights.',
+    imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.7,
+    priceLevel: 3,
+    address: '6177 Delmar Blvd, St. Louis, MO 63112',
+    aiSummary: 'Stunning rooftop bar with skyline views and DJ nights.',
+    featured: true,
+    district: 'delmar'
+  },
+  {
     id: 'l14',
     name: "Cathy's Kitchen",
     category: 'Food',

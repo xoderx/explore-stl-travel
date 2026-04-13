@@ -29,13 +29,13 @@ export class ChatBoardEntity extends IndexedEntity<ChatBoardState> {
 export class ListingEntity extends IndexedEntity<Listing> {
   static readonly entityName = "listing";
   static readonly indexName = "listings";
-  static readonly initialState: Listing = { id: "", name: "", category: "Attractions", description: "", imageUrl: "", rating: 0, priceLevel: 1, address: "", aiSummary: "" };
+  static readonly initialState: Listing = { id: "", name: "", category: "Attractions", description: "", imageUrl: "", rating: 0, priceLevel: 1, address: "", aiSummary: "", district: 'stl' };
   static seedData = MOCK_LISTINGS;
 }
 export class EventEntity extends IndexedEntity<Event> {
   static readonly entityName = "event";
   static readonly indexName = "events";
-  static readonly initialState: Event = { id: "", name: "", venueId: "", venueName: "", date: "", time: "", category: "", imageUrl: "", description: "" };
+  static readonly initialState: Event = { id: "", name: "", venueId: "", venueName: "", date: "", time: "", category: "", imageUrl: "", description: "", district: 'stl' };
   static seedData = MOCK_EVENTS;
 }
 export class ReviewEntity extends IndexedEntity<Review> {

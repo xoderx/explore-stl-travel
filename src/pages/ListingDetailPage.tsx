@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 export function ListingDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
