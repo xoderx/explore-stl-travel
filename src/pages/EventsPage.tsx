@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Calendar as CalendarIcon, MapPin, Clock, Search } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Clock, Music } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import type { Event } from '@shared/types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,16 +15,13 @@ export function EventsPage() {
   const [selectedDate, setSelectedDate] = useState(startOfToday());
   const [liveOnly, setLiveOnly] = useState(false);
   const currentDistrict = useDistrictStore(s => s.currentDistrict);
-
   const { data: events, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => api<Event[]>('/api/events'),
   });
-
   const filteredEvents = events
     ?.filter(e => e.district === currentDistrict)
     ?.filter(e => !liveOnly || e.isLive);
-
   const next7Days = Array.from({ length: 7 }).map((_, i) => addDays(startOfToday(), i));
   return (
     <div className="space-y-8 animate-fade-in">
@@ -36,7 +33,6 @@ export function EventsPage() {
         <ScrollArea className="w-full whitespace-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
           <div className="flex gap-3 pb-4">
             {next7Days.map((date) => {
-              const dateStr = format(date, 'yyyy-MM-dd');
               const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
               return (
                 <div
@@ -45,13 +41,11 @@ export function EventsPage() {
                   className={cn(
                     "flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl border transition-all cursor-pointer",
                     isSelected
-                      ? (currentDistrict === 'delmar'
-                          ? "bg-pink-500 border-pink-500 text-white shadow-lg shadow-pink-500/30 scale-105"
-                          : "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30 scale-105")
+                      ? "bg-primary border-primary text-primary-foreground shadow-lg scale-105"
                       : "bg-secondary/50 border-transparent hover:bg-secondary hover:border-border/50"
                   )}
                 >
-                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", isSelected ? "text-orange-100" : "text-muted-foreground")}>
+                  <span className={cn("text-[10px] font-bold uppercase tracking-wider", isSelected ? "opacity-80" : "text-muted-foreground")}>
                     {format(date, 'EEE')}
                   </span>
                   <span className="text-xl font-bold">
@@ -69,7 +63,7 @@ export function EventsPage() {
             {format(selectedDate, 'MMMM do, yyyy')}
           </h3>
           <div className="flex gap-2">
-            {currentDistrict === 'delmar' && (
+            {(currentDistrict === 'delmar' || currentDistrict === 'grove') && (
               <Button
                 variant={liveOnly ? "default" : "outline"}
                 size="sm"
@@ -107,13 +101,10 @@ export function EventsPage() {
                     <div className="p-6 flex-1 flex flex-col justify-between">
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-4">
-                          <h4 className="font-bold text-xl leading-tight group-hover:text-orange-500 transition-colors">
+                          <h4 className="font-bold text-xl leading-tight group-hover:text-primary transition-colors">
                             {event.name}
                           </h4>
-                          <Badge className={cn(
-                            "text-white border-none shrink-0 font-bold px-3",
-                            currentDistrict === 'delmar' ? "bg-pink-500" : "bg-orange-500"
-                          )}>
+                          <Badge className="bg-primary text-primary-foreground border-none shrink-0 font-bold px-3">
                             {event.category}
                           </Badge>
                         </div>
@@ -124,11 +115,11 @@ export function EventsPage() {
                         )}
                         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pt-1">
                           <div className="flex items-center gap-1.5 font-medium">
-                            <Clock className="w-4 h-4 text-orange-500" />
+                            <Clock className="w-4 h-4 text-primary" />
                             <span>{event.time}</span>
                           </div>
                           <div className="flex items-center gap-1.5 font-medium">
-                            <MapPin className="w-4 h-4 text-blue-500" />
+                            <MapPin className="w-4 h-4 text-muted-foreground" />
                             <span>{event.venueName}</span>
                           </div>
                         </div>
@@ -137,7 +128,7 @@ export function EventsPage() {
                         <p className="text-sm text-muted-foreground line-clamp-1 italic max-w-[70%]">
                           {event.description}
                         </p>
-                        <Button variant="ghost" size="sm" className="rounded-xl text-orange-500 hover:text-orange-600 font-bold gap-1 group/btn">
+                        <Button variant="ghost" size="sm" className="rounded-xl text-primary font-bold gap-1 group/btn">
                           View details <span className="transition-transform group-hover/btn:translate-x-1">→</span>
                         </Button>
                       </div>
@@ -152,7 +143,7 @@ export function EventsPage() {
                 <CalendarIcon className="w-8 h-8 text-muted-foreground" />
               </div>
               <h4 className="text-xl font-bold">No events today</h4>
-              <p className="text-muted-foreground max-w-xs mx-auto">Check other dates to see what's coming up in St. Louis.</p>
+              <p className="text-muted-foreground max-w-xs mx-auto">Check other dates to see what's coming up in the district.</p>
               <Button variant="outline" onClick={() => setSelectedDate(startOfToday())} className="rounded-xl">Back to Today</Button>
             </div>
           )}

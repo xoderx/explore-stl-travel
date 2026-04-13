@@ -18,10 +18,11 @@ export interface ChatMessage {
   text: string;
   ts: number;
 }
+export type District = 'stl' | 'delmar' | 'cwe' | 'grove' | 'downtown';
 export interface Listing {
   id: string;
   name: string;
-  category: 'Food' | 'Nightlife' | 'Museums' | 'Attractions' | 'Parks';
+  category: 'Food' | 'Nightlife' | 'Museums' | 'Attractions' | 'Parks' | 'Boutiques' | 'Wellness' | 'Hotels' | 'Community';
   description: string;
   imageUrl: string;
   rating: number;
@@ -29,7 +30,7 @@ export interface Listing {
   address: string;
   aiSummary: string;
   featured?: boolean;
-  district: 'stl' | 'delmar';
+  district: District;
 }
 export interface Event {
   id: string;
@@ -41,8 +42,9 @@ export interface Event {
   category: string;
   imageUrl: string;
   description: string;
-  district: 'stl' | 'delmar';
+  district: District;
   isLive?: boolean;
+  isConvention?: boolean;
 }
 export interface Deal {
   id: string;
