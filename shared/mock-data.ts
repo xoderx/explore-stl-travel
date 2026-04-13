@@ -1,4 +1,4 @@
-import type { User, Chat, ChatMessage, Listing, Event, UserCard } from './types';
+import type { User, Chat, ChatMessage, Listing, Event, UserCard, DistrictImpact } from './types';
 export const MOCK_USERS: User[] = [
   { id: 'u1', name: 'User A' },
   { id: 'u2', name: 'User B' }
@@ -24,19 +24,6 @@ export const MOCK_LISTINGS: Listing[] = [
     district: 'stl'
   },
   {
-    id: 'l4',
-    name: 'Blueberry Hill',
-    category: 'Nightlife',
-    description: 'A St. Louis landmark in the Delmar Loop.',
-    imageUrl: 'https://images.unsplash.com/photo-1514525253344-99a4299966c2?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.8,
-    priceLevel: 2,
-    address: '6504 Delmar Blvd, St. Louis, MO 63130',
-    aiSummary: 'Iconic pop culture restaurant and music venue with a legendary atmosphere.',
-    featured: true,
-    district: 'delmar'
-  },
-  {
     id: 'l8',
     name: "Brennan's",
     category: 'Nightlife',
@@ -46,19 +33,6 @@ export const MOCK_LISTINGS: Listing[] = [
     priceLevel: 3,
     address: '4659 Maryland Ave, St. Louis, MO 63108',
     aiSummary: 'The definition of CWE elegance; perfect for a refined night out.',
-    featured: true,
-    district: 'cwe'
-  },
-  {
-    id: 'l9',
-    name: 'Brasserie by Niche',
-    category: 'Food',
-    description: 'Classic French bistro fare in a beautiful setting.',
-    imageUrl: 'https://images.unsplash.com/photo-1550966841-3ee7adac1668?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.8,
-    priceLevel: 3,
-    address: '4580 Laclede Ave, St. Louis, MO 63108',
-    aiSummary: 'Award-winning French comfort food that feels like a trip to Paris.',
     featured: true,
     district: 'cwe'
   },
@@ -76,19 +50,6 @@ export const MOCK_LISTINGS: Listing[] = [
     district: 'grove'
   },
   {
-    id: 'l11',
-    name: 'Urban Chestnut',
-    category: 'Nightlife',
-    description: 'Massive biergarten and craft brewery.',
-    imageUrl: 'https://images.unsplash.com/photo-1555658636-6e4a36218be7?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.6,
-    priceLevel: 2,
-    address: '4465 Manchester Ave, St. Louis, MO 63110',
-    aiSummary: 'Industrial-chic brewery with amazing outdoor seating.',
-    featured: true,
-    district: 'grove'
-  },
-  {
     id: 'l12',
     name: 'The Last Hotel',
     category: 'Hotels',
@@ -102,17 +63,44 @@ export const MOCK_LISTINGS: Listing[] = [
     district: 'downtown'
   },
   {
-    id: 'l13',
-    name: 'America Center',
-    category: 'Attractions',
-    description: 'St. Louis premier convention and meeting facility.',
-    imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.4,
+    id: 'l14',
+    name: "Cathy's Kitchen",
+    category: 'Food',
+    description: 'Authentic Southern comfort food and diner classics.',
+    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.9,
     priceLevel: 2,
-    address: '701 Convention Plaza, St. Louis, MO 63101',
-    aiSummary: 'Hub for business travelers and major regional expos.',
+    address: '250 S Florissant Rd, Ferguson, MO 63135',
+    aiSummary: 'A Ferguson staple serving up the heart and soul of the district.',
+    featured: true,
+    district: 'ferguson',
+    isBlackOwned: true
+  },
+  {
+    id: 'l15',
+    name: 'I Love Ferguson',
+    category: 'Community',
+    description: 'Community resource center and local commemorative shop.',
+    imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.8,
+    priceLevel: 1,
+    address: '108 S Florissant Rd, Ferguson, MO 63135',
+    aiSummary: 'The heart of local pride and community rebuilding efforts.',
+    featured: true,
+    district: 'ferguson'
+  },
+  {
+    id: 'l16',
+    name: 'Ferguson Empowerment Center',
+    category: 'Youth Initiatives',
+    description: 'A hub for educational programs and job training.',
+    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.9,
+    priceLevel: 1,
+    address: '9420 W Florissant Ave, Ferguson, MO 63136',
+    aiSummary: 'Driving future success through youth mentorship and resources.',
     featured: false,
-    district: 'downtown'
+    district: 'ferguson'
   }
 ];
 export const MOCK_EVENTS: Event[] = [
@@ -129,42 +117,17 @@ export const MOCK_EVENTS: Event[] = [
     district: 'stl'
   },
   {
-    id: 'e5',
-    name: 'CWE House Tour',
-    venueId: 'v5',
-    venueName: 'Maryland Plaza',
-    date: '2024-05-25',
-    time: '11:00',
+    id: 'e8',
+    name: 'Unity Weekend Festival',
+    venueId: 'v8',
+    venueName: 'January-Wabash Park',
+    date: '2024-06-15',
+    time: '12:00',
     category: 'Culture',
-    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop',
-    description: 'Tour the most beautiful historic homes in St. Louis.',
-    district: 'cwe'
-  },
-  {
-    id: 'e6',
-    name: 'Grove Pride Night',
-    venueId: 'v6',
-    venueName: 'Manchester Ave',
-    date: '2024-06-01',
-    time: '21:00',
-    category: 'Nightlife',
     imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop',
-    description: 'A celebration of love and diversity in The Grove.',
-    district: 'grove',
-    isLive: true
-  },
-  {
-    id: 'e7',
-    name: 'Tech Innovation Expo',
-    venueId: 'v7',
-    venueName: 'America Center',
-    date: '2024-05-28',
-    time: '09:00',
-    category: 'Business',
-    imageUrl: 'https://images.unsplash.com/photo-1475721027187-402ad2989a38?q=80&w=1000&auto=format&fit=crop',
-    description: 'The largest technology gathering in the Midwest.',
-    district: 'downtown',
-    isConvention: true
+    description: 'Celebrating Ferguson community and local business.',
+    district: 'ferguson',
+    impactScore: 95
   }
 ];
 export const MOCK_USER_CARD: UserCard = {
@@ -174,3 +137,45 @@ export const MOCK_USER_CARD: UserCard = {
   tier: 'Gold',
   joinedDate: '2023-11-10'
 };
+export const MOCK_ROI_DATA: DistrictImpact[] = [
+  {
+    district: 'ferguson',
+    spendGenerated: 125400,
+    businessesSupported: 42,
+    activeRewards: 18,
+    footTraffic: [
+      { day: 'Mon', count: 120 },
+      { day: 'Tue', count: 150 },
+      { day: 'Wed', count: 180 },
+      { day: 'Thu', count: 220 },
+      { day: 'Fri', count: 350 },
+      { day: 'Sat', count: 480 },
+      { day: 'Sun', count: 410 },
+    ],
+    categories: [
+      { name: 'Food', value: 45 },
+      { name: 'Retail', value: 25 },
+      { name: 'Community', value: 30 },
+    ]
+  },
+  {
+    district: 'delmar',
+    spendGenerated: 342000,
+    businessesSupported: 88,
+    activeRewards: 32,
+    footTraffic: [
+      { day: 'Mon', count: 400 },
+      { day: 'Tue', count: 420 },
+      { day: 'Wed', count: 450 },
+      { day: 'Thu', count: 580 },
+      { day: 'Fri', count: 850 },
+      { day: 'Sat', count: 1200 },
+      { day: 'Sun', count: 950 },
+    ],
+    categories: [
+      { name: 'Music', value: 50 },
+      { name: 'Food', value: 35 },
+      { name: 'Nightlife', value: 15 },
+    ]
+  }
+];

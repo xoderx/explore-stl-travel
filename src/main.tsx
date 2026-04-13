@@ -18,6 +18,7 @@ import { CityCardPage } from '@/pages/CityCardPage'
 import { EventsPage } from '@/pages/EventsPage'
 import { ListingDetailPage } from '@/pages/ListingDetailPage'
 import { EventDetailPage } from '@/pages/EventDetailPage'
+import { ROIDashboardPage } from '@/pages/ROIDashboardPage'
 import { AppLayout } from '@/components/layout/AppLayout'
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -54,6 +55,11 @@ const router = createBrowserRouter([
   {
     path: "/event/:id",
     element: <AppLayout container><EventDetailPage /></AppLayout>,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/dashboard",
+    element: <AppLayout container><ROIDashboardPage /></AppLayout>,
     errorElement: <RouteErrorBoundary />,
   },
 ]);

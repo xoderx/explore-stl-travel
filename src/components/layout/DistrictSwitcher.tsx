@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Music, Landmark, Coffee, Heart, Briefcase } from 'lucide-react';
-import { useDistrictStore, type District } from '@/store/use-district-store';
+import { Music, Landmark, Coffee, Heart, Briefcase, Users2 } from 'lucide-react';
+import { useDistrictStore } from '@/store/use-district-store';
+import type { District } from '@shared/types';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 export function DistrictSwitcher() {
@@ -13,11 +14,12 @@ export function DistrictSwitcher() {
     { id: 'cwe', label: 'CWE', icon: Coffee, color: 'bg-stone-800' },
     { id: 'grove', label: 'The Grove', icon: Heart, color: 'bg-purple-600' },
     { id: 'downtown', label: 'Downtown', icon: Briefcase, color: 'bg-blue-800' },
+    { id: 'ferguson', label: 'Ferguson', icon: Users2, color: 'bg-amber-700' },
   ];
   return (
-    <div className="flex max-w-[320px] sm:max-w-none bg-background/60 backdrop-blur-xl p-1 rounded-full border border-border shadow-2xl">
+    <div className="flex max-w-[320px] sm:max-w-none bg-background/60 backdrop-blur-xl p-1 rounded-full border border-border shadow-2xl overflow-hidden">
       <ScrollArea className="w-full">
-        <div className="flex gap-1 px-1">
+        <div className="flex gap-1 px-1 py-0.5">
           {districts.map((d) => {
             const isActive = currentDistrict === d.id;
             const Icon = d.icon;

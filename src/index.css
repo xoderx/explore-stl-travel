@@ -40,6 +40,10 @@
     --primary: 215 90% 40%;
     --primary-foreground: 45 90% 70%;
   }
+  .district-ferguson {
+    --primary: 28 80% 45%;
+    --primary-foreground: 0 0% 100%;
+  }
 }
 @layer utilities {
   .pb-safe {
@@ -67,4 +71,15 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+/* ROI Dashboard Chart Styles */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: hsl(var(--border));
+  stroke-opacity: 0.5;
+}
+.recharts-text {
+  fill: hsl(var(--muted-foreground));
+  font-size: 10px;
+  font-weight: 500;
 }

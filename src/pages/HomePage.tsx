@@ -1,10 +1,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Sparkles, Utensils, Landmark, Music, Trees, Coffee, ShoppingBag, Briefcase } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import type { Listing } from '@shared/types';
 import { ListingCard } from '@/components/shared/ListingCard';
-import { LoopNightsModule } from '@/components/special/LoopNightsModule';
 import { DistrictModules } from '@/components/special/DistrictModules';
 import { WalkableMap } from '@/components/special/WalkableMap';
 import { useDistrictStore } from '@/store/use-district-store';
@@ -24,6 +22,7 @@ export function HomePage() {
       case 'cwe': return { tag: 'Refined Lifestyle', title: 'Central West End', desc: 'Sidewalk cafes, elegant boutiques, and historic charm.', accent: 'from-stone-600 to-stone-400' };
       case 'grove': return { tag: 'Vibrant & Diverse', title: 'The Grove', desc: 'The heart of STL nightlife and LGBTQ+ culture.', accent: 'from-purple-500 to-pink-500' };
       case 'downtown': return { tag: 'The Gateway', title: 'Downtown STL', desc: 'Where business meets pleasure in the heart of the city.', accent: 'from-blue-600 to-amber-500' };
+      case 'ferguson': return { tag: 'Community & Culture', title: 'Strength in Ferguson', desc: 'A district built on resilience, local flavor, and community impact.', accent: 'from-amber-600 to-amber-500' };
       default: return { tag: 'Gateway to Adventure', title: 'Explore St. Louis', desc: 'Discover the best of the 314 with your personal Travel OS.', accent: 'from-orange-500 to-orange-400' };
     }
   };
