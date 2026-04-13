@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Music, Landmark, Coffee, Heart, Briefcase, Users2 } from 'lucide-react';
+import { Music, Landmark, Coffee, Heart, Briefcase, Users2, Trophy } from 'lucide-react';
 import { useDistrictStore } from '@/store/use-district-store';
 import type { District } from '@shared/types';
 import { cn } from '@/lib/utils';
@@ -14,7 +14,9 @@ export function DistrictSwitcher() {
     { id: 'cwe', label: 'CWE', icon: Coffee, color: 'bg-stone-800' },
     { id: 'grove', label: 'The Grove', icon: Heart, color: 'bg-purple-600' },
     { id: 'downtown', label: 'Downtown', icon: Briefcase, color: 'bg-blue-800' },
+    { id: 'ballpark', label: 'Ballpark Village', icon: Trophy, color: 'bg-red-800' },
     { id: 'ferguson', label: 'Ferguson', icon: Users2, color: 'bg-amber-700' },
+    { id: 'south-city', label: 'South City', icon: Coffee, color: 'bg-emerald-700' },
   ];
   return (
     <div className="flex max-w-[320px] sm:max-w-none bg-background/60 backdrop-blur-xl p-1 rounded-full border border-border shadow-2xl overflow-hidden">

@@ -1,4 +1,4 @@
-import type { User, Chat, ChatMessage, Listing, Event, UserCard, DistrictImpact, Review, Transaction } from './types';
+import type { User, Chat, ChatMessage, Listing, Event, UserCard, DistrictImpact, Review, Transaction, ActivityEvent } from './types';
 export const MOCK_USERS: User[] = [
   { id: 'u1', name: 'User A' },
   { id: 'u2', name: 'User B' }
@@ -35,6 +35,32 @@ export const MOCK_LISTINGS: Listing[] = [
     aiSummary: 'The definition of CWE elegance; perfect for a refined night out.',
     featured: true,
     district: 'cwe'
+  },
+  {
+    id: 'l21',
+    name: "Ted Drewes Frozen Custard",
+    category: 'Food',
+    description: 'A St. Louis tradition on Route 66 since 1929.',
+    imageUrl: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.9,
+    priceLevel: 1,
+    address: '6726 Chippewa St, St. Louis, MO 63109',
+    aiSummary: 'Legendary frozen custard; get the "Concrete" and flip it upside down!',
+    featured: true,
+    district: 'south-city'
+  },
+  {
+    id: 'l22',
+    name: "Ballpark Village",
+    category: 'Nightlife',
+    description: 'Sports-anchored entertainment district right across from Busch Stadium.',
+    imageUrl: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
+    rating: 4.6,
+    priceLevel: 3,
+    address: '601 Clark Ave, St. Louis, MO 63102',
+    aiSummary: 'The heartbeat of St. Louis sports fans during game day.',
+    featured: true,
+    district: 'ballpark'
   },
   {
     id: 'l10',
@@ -76,32 +102,6 @@ export const MOCK_LISTINGS: Listing[] = [
     district: 'delmar'
   },
   {
-    id: 'l18',
-    name: 'Blueberry Hill',
-    category: 'Food',
-    description: 'Iconic diner, bar, and music spot owned by Chuck Berry family.',
-    imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.8,
-    priceLevel: 2,
-    address: '6504 Delmar Blvd, St. Louis, MO 63130',
-    aiSummary: 'Iconic diner, bar, and music spot owned by Chuck Berry family.',
-    featured: true,
-    district: 'delmar'
-  },
-  {
-    id: 'l19',
-    name: 'The Moonrise Rooftop',
-    category: 'Nightlife',
-    description: 'Stunning rooftop bar with skyline views and DJ nights.',
-    imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.7,
-    priceLevel: 3,
-    address: '6177 Delmar Blvd, St. Louis, MO 63112',
-    aiSummary: 'Stunning rooftop bar with skyline views and DJ nights.',
-    featured: true,
-    district: 'delmar'
-  },
-  {
     id: 'l14',
     name: "Cathy's Kitchen",
     category: 'Food',
@@ -114,32 +114,6 @@ export const MOCK_LISTINGS: Listing[] = [
     featured: true,
     district: 'ferguson',
     isBlackOwned: true
-  },
-  {
-    id: 'l15',
-    name: 'I Love Ferguson',
-    category: 'Community',
-    description: 'Community resource center and local commemorative shop.',
-    imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.8,
-    priceLevel: 1,
-    address: '108 S Florissant Rd, Ferguson, MO 63135',
-    aiSummary: 'The heart of local pride and community rebuilding efforts.',
-    featured: true,
-    district: 'ferguson'
-  },
-  {
-    id: 'l16',
-    name: 'Ferguson Empowerment Center',
-    category: 'Youth Initiatives',
-    description: 'A hub for educational programs and job training.',
-    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop',
-    rating: 4.9,
-    priceLevel: 1,
-    address: '9420 W Florissant Ave, Ferguson, MO 63136',
-    aiSummary: 'Driving future success through youth mentorship and resources.',
-    featured: false,
-    district: 'ferguson'
   }
 ];
 export const MOCK_EVENTS: Event[] = [
@@ -154,25 +128,10 @@ export const MOCK_EVENTS: Event[] = [
     imageUrl: 'https://images.unsplash.com/photo-1508344928928-7165167de122?q=80&w=1000&auto=format&fit=crop',
     description: 'Classic MLB rivalry game.',
     district: 'stl'
-  },
-  {
-    id: 'e8',
-    name: 'Unity Weekend Festival',
-    venueId: 'v8',
-    venueName: 'January-Wabash Park',
-    date: '2024-06-15',
-    time: '12:00',
-    category: 'Culture',
-    imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop',
-    description: 'Celebrating Ferguson community and local business.',
-    district: 'ferguson',
-    impactScore: 95
   }
 ];
 export const MOCK_REVIEWS: Review[] = [
   { id: 'r1', listingId: 'l14', userName: 'StL Foodie', rating: 5, comment: 'The catfish is actually life-changing. Best spot in Ferguson!', date: 'Oct 2, 2024' },
-  { id: 'r2', listingId: 'l1', userName: 'TravelerX', rating: 4, comment: 'The views are great, but the wait for the tram was long.', date: 'Oct 15, 2024' },
-  { id: 'r3', listingId: 'l8', userName: 'NightOwl', rating: 5, comment: 'Incredible cigar selection and very refined atmosphere.', date: 'Oct 18, 2024' },
 ];
 export const MOCK_USER_CARD: UserCard = {
   userId: 'u1',
@@ -182,7 +141,6 @@ export const MOCK_USER_CARD: UserCard = {
   joinedDate: '2023-11-10',
   transactions: [
     { id: 't1', userId: 'u1', type: 'Bonus', amount: 1000, description: 'Welcome Reward', timestamp: '2023-11-10T12:00:00Z' },
-    { id: 't2', userId: 'u1', type: 'Check-in', amount: 50, description: 'Cathy\'s Kitchen Visit', timestamp: '2024-10-02T18:30:00Z' },
   ]
 };
 export const MOCK_ROI_DATA: DistrictImpact[] = [
@@ -192,38 +150,26 @@ export const MOCK_ROI_DATA: DistrictImpact[] = [
     businessesSupported: 42,
     activeRewards: 18,
     footTraffic: [
-      { day: 'Mon', count: 120 },
-      { day: 'Tue', count: 150 },
-      { day: 'Wed', count: 180 },
-      { day: 'Thu', count: 220 },
-      { day: 'Fri', count: 350 },
-      { day: 'Sat', count: 480 },
-      { day: 'Sun', count: 410 },
+      { day: 'Mon', count: 120 }, { day: 'Tue', count: 150 }, { day: 'Wed', count: 180 }, { day: 'Thu', count: 220 }, { day: 'Fri', count: 350 }, { day: 'Sat', count: 480 }, { day: 'Sun', count: 410 },
     ],
     categories: [
-      { name: 'Food', value: 45 },
-      { name: 'Retail', value: 25 },
-      { name: 'Community', value: 30 },
+      { name: 'Food', value: 45 }, { name: 'Retail', value: 25 }, { name: 'Community', value: 30 },
     ]
   },
   {
-    district: 'delmar',
-    spendGenerated: 342000,
-    businessesSupported: 88,
-    activeRewards: 32,
+    district: 'stl',
+    spendGenerated: 850400,
+    businessesSupported: 156,
+    activeRewards: 45,
     footTraffic: [
-      { day: 'Mon', count: 400 },
-      { day: 'Tue', count: 420 },
-      { day: 'Wed', count: 450 },
-      { day: 'Thu', count: 580 },
-      { day: 'Fri', count: 850 },
-      { day: 'Sat', count: 1200 },
-      { day: 'Sun', count: 950 },
+      { day: 'Mon', count: 520 }, { day: 'Tue', count: 650 }, { day: 'Wed', count: 580 }, { day: 'Thu', count: 720 }, { day: 'Fri', count: 950 }, { day: 'Sat', count: 1480 }, { day: 'Sun', count: 1110 },
     ],
     categories: [
-      { name: 'Music', value: 50 },
-      { name: 'Food', value: 35 },
-      { name: 'Nightlife', value: 15 },
+      { name: 'Attractions', value: 60 }, { name: 'Food', value: 25 }, { name: 'Museums', value: 15 },
     ]
   }
+];
+export const MOCK_ACTIVITY_EVENTS: ActivityEvent[] = [
+  { id: 'a1', type: 'check-in', message: 'New visitor at Gateway Arch', timestamp: 'Just now', district: 'stl' },
+  { id: 'a2', type: 'deal', message: 'Reward redeemed at Ted Drewes', timestamp: '5m ago', district: 'south-city' },
 ];

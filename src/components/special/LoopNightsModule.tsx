@@ -54,6 +54,7 @@ export function LoopNightsModule() {
                   <span className="text-xs font-bold block">{vibe.label}</span>
                 </button>
               ))}
+            </div>
             <Button
               disabled={!selectedVibe || isGenerating}
               onClick={generatePlan}

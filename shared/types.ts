@@ -18,7 +18,14 @@ export interface ChatMessage {
   text: string;
   ts: number;
 }
-export type District = 'stl' | 'delmar' | 'cwe' | 'grove' | 'downtown' | 'ferguson';
+export type District = 'stl' | 'delmar' | 'cwe' | 'grove' | 'downtown' | 'ferguson' | 'south-city' | 'ballpark';
+export interface ActivityEvent {
+  id: string;
+  type: 'check-in' | 'deal' | 'event' | 'trending';
+  message: string;
+  timestamp: string;
+  district: District;
+}
 export interface Listing {
   id: string;
   name: string;
