@@ -9,13 +9,22 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { format, addDays, startOfToday } from 'date-fns';
+import { useDistrictStore } from '@/store/use-district-store';
 import { cn } from '@/lib/utils';
 export function EventsPage() {
   const [selectedDate, setSelectedDate] = useState(startOfToday());
+  const [liveOnly, setLiveOnly] = useState(false);
+  const currentDistrict = useDistrictStore(s => s.currentDistrict);
+
   const { data: events, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => api<Event[]>('/api/events'),
   });
+
+  const filteredEvents = events
+    ?.filter(e => e.district === currentDistrict)
+    ?.filter(e => !liveOnly || e.isLive);
+
   const next7Days = Array.from({ length: 7 }).map((_, i) => addDays(startOfToday(), i));
   return (
     <div className="space-y-8 animate-fade-in">
@@ -36,7 +45,9 @@ export function EventsPage() {
                   className={cn(
                     "flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl border transition-all cursor-pointer",
                     isSelected
-                      ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30 scale-105"
+                      ? (currentDistrict === 'delmar'
+                          ? "bg-pink-500 border-pink-500 text-white shadow-lg shadow-pink-500/30 scale-105"
+                          : "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30 scale-105")
                       : "bg-secondary/50 border-transparent hover:bg-secondary hover:border-border/50"
                   )}
                 >
@@ -57,17 +68,32 @@ export function EventsPage() {
           <h3 className="font-bold text-foreground text-sm uppercase tracking-[0.2em]">
             {format(selectedDate, 'MMMM do, yyyy')}
           </h3>
-          <Badge variant="secondary" className="rounded-lg font-bold">
-            {events?.length || 0} Events
-          </Badge>
+          <div className="flex gap-2">
+            {currentDistrict === 'delmar' && (
+              <Button
+                variant={liveOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => setLiveOnly(!liveOnly)}
+                className={cn(
+                  "rounded-full h-8 px-4 text-xs font-bold transition-all",
+                  liveOnly && "bg-pink-500 hover:bg-pink-600 border-none shadow-lg shadow-pink-500/20"
+                )}
+              >
+                Live Music
+              </Button>
+            )}
+            <Badge variant="secondary" className="rounded-lg font-bold h-8 px-3">
+              {filteredEvents?.length || 0} Events
+            </Badge>
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-6">
           {isLoading ? (
             Array(3).fill(0).map((_, i) => (
               <div key={i} className="h-40 w-full rounded-3xl bg-secondary animate-pulse" />
             ))
-          ) : events?.length ? (
-            events.map((event) => (
+          ) : filteredEvents?.length ? (
+            filteredEvents.map((event) => (
               <Link key={event.id} to={`/event/${event.id}`} className="block group">
                 <Card className="overflow-hidden border-none bg-secondary/20 group hover:bg-secondary/40 hover:shadow-xl transition-all rounded-3xl">
                   <CardContent className="p-0 flex flex-col md:flex-row h-full">
@@ -84,10 +110,18 @@ export function EventsPage() {
                           <h4 className="font-bold text-xl leading-tight group-hover:text-orange-500 transition-colors">
                             {event.name}
                           </h4>
-                          <Badge className="bg-orange-500 text-white border-none shrink-0 font-bold px-3">
+                          <Badge className={cn(
+                            "text-white border-none shrink-0 font-bold px-3",
+                            currentDistrict === 'delmar' ? "bg-pink-500" : "bg-orange-500"
+                          )}>
                             {event.category}
                           </Badge>
                         </div>
+                        {event.isLive && (
+                          <div className="flex items-center gap-1.5 text-xs text-pink-500 font-bold uppercase animate-pulse">
+                            <Music className="w-3 h-3" /> Live Now
+                          </div>
+                        )}
                         <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pt-1">
                           <div className="flex items-center gap-1.5 font-medium">
                             <Clock className="w-4 h-4 text-orange-500" />

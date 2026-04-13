@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { MobileNav } from "./MobileNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { DistrictSwitcher } from "./DistrictSwitcher";
+import { useDistrictStore } from "@/store/use-district-store";
 type AppLayoutProps = {
   children: React.ReactNode;
   container?: boolean;
@@ -12,11 +14,18 @@ type AppLayoutProps = {
 };
 export function AppLayout({ children, container = false, className, contentClassName }: AppLayoutProps): JSX.Element {
   const isMobile = useIsMobile();
+  const currentDistrict = useDistrictStore(s => s.currentDistrict);
+
   return (
     <SidebarProvider defaultOpen={false}>
       {!isMobile && <AppSidebar />}
-      <SidebarInset className={className}>
-        <ThemeToggle className="absolute top-4 right-4" />
+      <SidebarInset className={cn(
+        className,
+        currentDistrict === 'delmar' ? "district-delmar" : "district-stl"
+      )}>
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
+          <DistrictSwitcher />
+        </div>
         <main className={cn(
           "flex-1 w-full min-h-screen",
           isMobile ? "pb-20" : "",

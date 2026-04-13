@@ -8,16 +8,19 @@ import { ListingCard } from '@/components/shared/ListingCard';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useDistrictStore } from '@/store/use-district-store';
 import { cn } from '@/lib/utils';
-const filters = ['All', 'Food', 'Attractions', 'Nightlife', 'Museums', 'Parks'];
 export function DirectoryPage() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const currentDistrict = useDistrictStore(s => s.currentDistrict);
+  const filters = currentDistrict === 'delmar' ? ['All', 'Food', 'Nightlife', 'Music'] : ['All', 'Food', 'Attractions', 'Nightlife', 'Museums', 'Parks'];
+
   const { data: listings, isLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => api<Listing[]>('/api/listings'),
   });
-  const filtered = listings?.filter(l => {
+  const filtered = listings?.filter(l => l.district === currentDistrict).filter(l => {
     const matchesFilter = selectedFilter === 'All' || l.category === selectedFilter;
     const matchesSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||
                           l.category.toLowerCase().includes(search.toLowerCase());
@@ -59,8 +62,10 @@ export function DirectoryPage() {
               onClick={() => setSelectedFilter(f)}
               className={cn(
                 "px-5 py-2.5 rounded-xl cursor-pointer transition-all border-none text-sm font-bold whitespace-nowrap",
-                selectedFilter === f 
-                  ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20 scale-105" 
+                selectedFilter === f
+                  ? (currentDistrict === 'delmar'
+                      ? "bg-pink-500 text-white shadow-lg shadow-pink-500/20 scale-105"
+                      : "bg-orange-500 text-white shadow-lg shadow-orange-500/20 scale-105")
                   : "bg-secondary/40 text-muted-foreground hover:bg-secondary/60"
               )}
             >

@@ -4,8 +4,12 @@ import { Sparkles, Utensils, Landmark, Music, Trees } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import type { Listing } from '@shared/types';
 import { ListingCard } from '@/components/shared/ListingCard';
+import { LoopNightsModule } from '@/components/special/LoopNightsModule';
+import { WalkableMap } from '@/components/special/WalkableMap';
+import { useDistrictStore } from '@/store/use-district-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 const categories = [
   { name: 'Food', icon: Utensils, color: 'bg-orange-500' },
   { name: 'Attractions', icon: Landmark, color: 'bg-blue-500' },
@@ -13,19 +17,34 @@ const categories = [
   { name: 'Parks', icon: Trees, color: 'bg-green-500' },
 ];
 export function HomePage() {
+  const currentDistrict = useDistrictStore(s => s.currentDistrict);
   const { data: listings, isLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => api<Listing[]>('/api/listings'),
   });
+
+  const filteredListings = listings?.filter(l => l.district === currentDistrict);
+
   return (
     <div className="space-y-10 animate-fade-in">
       <section className="space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-xs font-bold tracking-[0.2em] text-orange-500 uppercase">Gateway to Adventure</h2>
-          <h1 className="text-4xl md:text-6xl font-display font-bold">Explore <span className="text-gradient">St. Louis</span></h1>
-          <p className="text-muted-foreground max-w-lg">Discover the best of the 314 with your personal Travel OS.</p>
-        </div>
+        {currentDistrict === 'delmar' ? (
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold tracking-[0.2em] text-pink-500 uppercase">Neon Nights</h2>
+            <h1 className="text-4xl md:text-6xl font-display font-bold">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-cyan-400 drop-shadow-sm">Delmar Loop</span></h1>
+            <p className="text-muted-foreground max-w-lg">One of the 10 great streets in America. Walkable, vibrant, legendary.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold tracking-[0.2em] text-orange-500 uppercase">Gateway to Adventure</h2>
+            <h1 className="text-4xl md:text-6xl font-display font-bold">Explore <span className="text-gradient">St. Louis</span></h1>
+            <p className="text-muted-foreground max-w-lg">Discover the best of the 314 with your personal Travel OS.</p>
+          </div>
+        )}
       </section>
+
+      {currentDistrict === 'delmar' && <WalkableMap />}
+
       <section>
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
           {categories.map((cat) => (
@@ -38,18 +57,24 @@ export function HomePage() {
           ))}
         </div>
       </section>
-      <section className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
-        <Sparkles className="absolute top-[-20px] right-[-20px] w-32 h-32 opacity-10 group-hover:scale-110 transition-transform" />
-        <div className="relative z-10 space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-2xl font-bold">Unlock 314 Deals</h3>
-            <p className="text-orange-100 text-sm max-w-xs">Scan your City Card at any partner venue to earn points and exclusive discounts.</p>
+
+      {currentDistrict === 'delmar' ? (
+        <LoopNightsModule />
+      ) : (
+        <section className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+          <Sparkles className="absolute top-[-20px] right-[-20px] w-32 h-32 opacity-10 group-hover:scale-110 transition-transform" />
+          <div className="relative z-10 space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold">Unlock 314 Deals</h3>
+              <p className="text-orange-100 text-sm max-w-xs">Scan your City Card at any partner venue to earn points and exclusive discounts.</p>
+            </div>
+            <Button variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50 border-none font-bold rounded-xl">
+              View My Wallet
+            </Button>
           </div>
-          <Button variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50 border-none font-bold rounded-xl">
-            View My Wallet
-          </Button>
-        </div>
-      </section>
+        </section>
+      )}
+
       <section className="space-y-6">
         <div className="flex justify-between items-end">
           <h3 className="text-2xl font-bold">Featured Experiences</h3>
@@ -65,7 +90,7 @@ export function HomePage() {
               </div>
             ))
           ) : (
-            listings?.filter(l => l.featured).map((listing) => (
+            filteredListings?.filter(l => l.featured).map((listing) => (
               <ListingCard key={listing.id} listing={listing} />
             ))
           )}

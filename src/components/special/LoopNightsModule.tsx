@@ -4,14 +4,11 @@ import { Sparkles, Music, Utensils, GlassWater, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-
 const vibes = [
   { id: 'chill', label: 'Chill & Lowkey', icon: GlassWater, color: 'from-blue-500 to-cyan-500' },
   { id: 'music', label: 'Live Music Fan', icon: Music, color: 'from-pink-500 to-purple-500' },
   { id: 'foodie', label: 'Late Night Foodie', icon: Utensils, color: 'from-orange-500 to-red-500' },
 ];
-
 export function LoopNightsModule() {
   const [selectedVibe, setSelectedVibe] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -98,3 +95,4 @@ export function LoopNightsModule() {
     </section>
   );
 }
+import { cn } from '@/lib/utils';

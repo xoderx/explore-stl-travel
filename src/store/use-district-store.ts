@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { District } from '@shared/types';
+export type District = 'stl' | 'delmar';
 interface DistrictState {
   currentDistrict: District;
   setDistrict: (district: District) => void;

@@ -29,6 +29,7 @@ export interface Listing {
   address: string;
   aiSummary: string;
   featured?: boolean;
+  district: 'stl' | 'delmar';
 }
 export interface Event {
   id: string;
@@ -40,6 +41,8 @@ export interface Event {
   category: string;
   imageUrl: string;
   description: string;
+  district: 'stl' | 'delmar';
+  isLive?: boolean;
 }
 export interface Deal {
   id: string;
