@@ -74,8 +74,8 @@ export function ROIDashboardPage() {
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Real-time sync</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="h-[350px] p-8 pt-4">
-              <ResponsiveContainer width="100%" height="100%">
+            <CardContent className="h-[380px] p-6 pt-0">
+              <ResponsiveContainer width="100%" height={320}>
                 <BarChart data={impactData?.footTraffic || []} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 700 }} />
@@ -93,8 +93,8 @@ export function ROIDashboardPage() {
             <CardHeader className="p-8 pb-0">
               <CardTitle className="text-xl font-black uppercase tracking-tight">Category Mix</CardTitle>
             </CardHeader>
-            <CardContent className="h-[350px] p-8 flex flex-col justify-center">
-              <ResponsiveContainer width="100%" height={220}>
+            <CardContent className="h-[380px] p-8 flex flex-col justify-center">
+              <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie
                     data={impactData?.categories || []}
