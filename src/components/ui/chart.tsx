@@ -86,18 +86,9 @@ ${colorConfig
   )
 }
 const ChartTooltip = RechartsPrimitive.Tooltip
-interface TooltipPayload {
-  payload?: any
-  dataKey?: string
-  name?: string
-  value?: any
-  color?: string
-  fill?: string
-  graphicalItemId?: any
-}
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+  RechartsPrimitive.TooltipProps<any, any> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean
       hideIndicator?: boolean
@@ -130,8 +121,8 @@ const ChartTooltipContent = React.forwardRef<
       if (hideLabel || !payload?.length) {
         return null
       }
-      const [item] = payload as TooltipPayload[]
-      const key = `${labelKey || item?.dataKey || item?.name || "value"}`
+      const [item] = payload
+      const key = `${labelKey || item.dataKey || item.name || "value"}`
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
         !labelKey && typeof label === "string"
@@ -157,11 +148,10 @@ const ChartTooltipContent = React.forwardRef<
       config,
       labelKey,
     ])
-    if (!active || !(payload as TooltipPayload[] | null)?.length) {
+    if (!active || !payload?.length) {
       return null
     }
-    const typedPayload = payload as TooltipPayload[]
-    const nestLabel = typedPayload.length === 1 && indicator !== "dot"
+    const nestLabel = payload.length === 1 && indicator !== "dot"
     return (
       <div
         ref={ref}
@@ -172,7 +162,7 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {typedPayload.map((item, index) => {
+          {payload.map((item, index) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
             const indicatorColor = color || item.payload?.fill || item.color
@@ -185,7 +175,7 @@ const ChartTooltipContent = React.forwardRef<
                 )}
               >
                 {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item as any, index, typedPayload as any)
+                  formatter(item.value, item.name, item, index, payload)
                 ) : (
                   <>
                     {itemConfig?.icon ? (
