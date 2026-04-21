@@ -91,7 +91,7 @@ export const MOCK_LISTINGS: Listing[] = [
   {
     id: 'l17',
     name: 'The Pageant',
-    category: 'Nightlife',
+    category: 'Music',
     description: 'Legendary live music venue hosting national acts and local talent.',
     imageUrl: 'https://images.unsplash.com/photo-1540031982925-bfbbe182f50f?q=80&w=1000&auto=format&fit=crop',
     rating: 4.9,

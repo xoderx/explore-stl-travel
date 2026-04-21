@@ -13,10 +13,29 @@ export function ImpactPreview() {
     queryKey: ['analytics', currentDistrict],
     queryFn: () => api<any>(`/api/analytics/${currentDistrict}`),
   });
+  const totalFootTraffic = (impact?.footTraffic || []).reduce(
+    (acc: number, curr: any) => acc + (Number(curr?.count) || 0),
+    0
+  );
   const stats = view === 'economic' ? [
-    { label: 'Total Local Spend', value: `$${impact?.spendGenerated?.toLocaleString() || '0'}`, icon: Wallet, color: 'text-emerald-500' },
-    { label: 'Verified Foot Traffic', value: impact?.footTraffic?.reduce((acc: number, curr: any) => acc + curr.count, 0).toLocaleString() || '0', icon: Users, color: 'text-blue-500' },
-    { label: 'Active Business Deals', value: impact?.activeRewards || 0, icon: Target, color: 'text-orange-500' }
+    { 
+      label: 'Total Local Spend', 
+      value: `${impact?.spendGenerated?.toLocaleString() || '0'}`, 
+      icon: Wallet, 
+      color: 'text-emerald-500' 
+    },
+    { 
+      label: 'Verified Foot Traffic', 
+      value: totalFootTraffic.toLocaleString(), 
+      icon: Users, 
+      color: 'text-blue-500' 
+    },
+    { 
+      label: 'Active Business Deals', 
+      value: impact?.activeRewards || 0, 
+      icon: Target, 
+      color: 'text-orange-500' 
+    }
   ] : [
     { label: 'Community Points', value: '45.2K', icon: Heart, color: 'text-pink-500' },
     { label: 'Districts Supported', value: '8/8', icon: BarChart3, color: 'text-purple-500' },
@@ -27,18 +46,26 @@ export function ImpactPreview() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-2xl font-display font-bold">Live Impact Preview</h3>
-          <p className="text-muted-foreground text-sm">Real-time data for the <span className="uppercase font-bold text-primary">{currentDistrict}</span> district.</p>
+          <p className="text-muted-foreground text-sm">
+            Real-time data for the <span className="uppercase font-bold text-primary">{currentDistrict}</span> district.
+          </p>
         </div>
         <div className="flex bg-secondary/50 rounded-xl p-1 shrink-0">
-          <button 
+          <button
             onClick={() => setView('economic')}
-            className={cn("px-4 py-1.5 text-xs font-bold rounded-lg transition-all", view === 'economic' ? "bg-background shadow-sm text-primary" : "text-muted-foreground")}
+            className={cn(
+              "px-4 py-1.5 text-xs font-bold rounded-lg transition-all",
+              view === 'economic' ? "bg-background shadow-sm text-primary" : "text-muted-foreground"
+            )}
           >
             Economic
           </button>
-          <button 
+          <button
             onClick={() => setView('community')}
-            className={cn("px-4 py-1.5 text-xs font-bold rounded-lg transition-all", view === 'community' ? "bg-background shadow-sm text-primary" : "text-muted-foreground")}
+            className={cn(
+              "px-4 py-1.5 text-xs font-bold rounded-lg transition-all",
+              view === 'community' ? "bg-background shadow-sm text-primary" : "text-muted-foreground"
+            )}
           >
             Community
           </button>

@@ -27,10 +27,10 @@ export function DirectoryPage() {
   const filters = useMemo(() => {
     switch (currentDistrict) {
       case 'delmar': return ['All', 'Food', 'Nightlife', 'Music'];
-      case 'cwe': return ['All', 'Food', 'Nightlife', 'Boutiques', 'Wellness'];
+      case 'cwe': return ['All', 'Food', 'Boutiques', 'Wellness', 'Nightlife'];
       case 'grove': return ['All', 'Nightlife', 'Community', 'Food'];
       case 'downtown': return ['All', 'Hotels', 'Attractions', 'Food'];
-      default: return ['All', 'Food', 'Attractions', 'Nightlife', 'Museums', 'Parks'];
+      default: return ['All', 'Food', 'Attractions', 'Nightlife', 'Museums', 'Boutiques', 'Wellness'];
     }
   }, [currentDistrict]);
   const { data: listings, isLoading } = useQuery({

@@ -29,7 +29,7 @@ export interface ActivityEvent {
 export interface Listing {
   id: string;
   name: string;
-  category: 'Food' | 'Nightlife' | 'Museums' | 'Attractions' | 'Parks' | 'Boutiques' | 'Wellness' | 'Hotels' | 'Community' | 'Youth Initiatives';
+  category: 'Food' | 'Nightlife' | 'Museums' | 'Attractions' | 'Parks' | 'Boutiques' | 'Wellness' | 'Hotels' | 'Community' | 'Youth Initiatives' | 'Music';
   description: string;
   imageUrl: string;
   rating: number;
