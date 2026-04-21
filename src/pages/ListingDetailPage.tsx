@@ -37,9 +37,9 @@ export function ListingDetailPage() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['card', 'u1'] });
-      toast.success(`Check-in complete! +50 Points added to your 314 Card.`);
+      toast.success(`Check-in verified! +50 Points added to your digital 314 Wallet.`);
     },
-    onError: (err: any) => toast.error(err.message || "Check-in failed")
+    onError: (err: any) => toast.error(err.message || "Verification failed. Are you at the venue?")
   });
   const reviewMutation = useMutation({
     mutationFn: (input: ReviewInput) => api(`/api/listings/${id}/reviews`, {
@@ -48,9 +48,10 @@ export function ListingDetailPage() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', id] });
-      toast.success("Review published!");
+      toast.success("Experience shared with the community!");
       setIsReviewOpen(false);
       setReviewText('');
+      setReviewRating(5);
     },
     onError: (err: any) => toast.error(err.message)
   });
@@ -82,19 +83,19 @@ export function ListingDetailPage() {
           <div className="aspect-video overflow-hidden rounded-3xl shadow-xl border">
             <img src={listing.imageUrl} alt={listing.name} className="w-full h-full object-cover" />
           </div>
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }} 
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="absolute bottom-4 right-4"
           >
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={() => checkInMutation.mutate()}
               disabled={checkInMutation.isPending}
               className="rounded-2xl gap-2 bg-orange-500 hover:bg-orange-600 text-white border-none shadow-glow font-bold h-14"
             >
               {checkInMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPinned className="w-5 h-5" />}
-              Check-in for 50 PTS
+              Verify Check-in
             </Button>
           </motion.div>
         </div>
@@ -148,22 +149,22 @@ export function ListingDetailPage() {
                   <div className="space-y-4 py-4">
                     <div className="flex justify-center gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <Star 
-                          key={star} 
-                          className={cn("w-8 h-8 cursor-pointer transition-colors", star <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground")} 
+                        <Star
+                          key={star}
+                          className={cn("w-8 h-8 cursor-pointer transition-colors", star <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground")}
                           onClick={() => setReviewRating(star)}
                         />
                       ))}
                     </div>
-                    <Textarea 
-                      placeholder="What did you love about this place?" 
+                    <Textarea
+                      placeholder="What did you love about this place?"
                       className="min-h-[100px] rounded-xl"
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                     />
                   </div>
                   <DialogFooter>
-                    <Button 
+                    <Button
                       className="w-full rounded-xl bg-orange-500 hover:bg-orange-600 font-bold"
                       onClick={() => reviewMutation.mutate({ listingId: id!, userName: 'Guest Explorer', rating: reviewRating, comment: reviewText })}
                       disabled={reviewMutation.isPending || !reviewText.trim()}

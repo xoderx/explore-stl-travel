@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import type { Listing, UserCard } from '@shared/types';
@@ -13,13 +13,9 @@ import { ActivityFeed } from '@/components/home/ActivityFeed';
 import { ExperienceGenerator } from '@/components/home/ExperienceGenerator';
 import { ImpactPreview } from '@/components/home/ImpactPreview';
 import { SocialFeed } from '@/components/home/SocialFeed';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { ArrowRight, Sparkles, TrendingUp, CheckCircle2, Crown } from 'lucide-react';
-import { toast } from 'sonner';
+import { ArrowRight, Sparkles, TrendingUp, Crown } from 'lucide-react';
 export function HomePage() {
   const currentDistrict = useDistrictStore(s => s.currentDistrict);
-  const [claimVenue, setClaimVenue] = useState<string | null>(null);
   const { data: listings, isLoading: listingsLoading } = useQuery({
     queryKey: ['listings'],
     queryFn: () => api<Listing[]>('/api/listings'),
@@ -28,11 +24,6 @@ export function HomePage() {
     queryKey: ['card', 'u1'],
     queryFn: () => api<UserCard & { id: string }>('/api/card/u1'),
   });
-  useEffect(() => {
-    const handler = (e: any) => setClaimVenue(e.detail);
-    window.addEventListener('open-claim-modal', handler);
-    return () => window.removeEventListener('open-claim-modal', handler);
-  }, []);
   const filteredListings = listings?.filter(l => l.district === currentDistrict);
   const sponsoredListings = listings?.filter(l => l.isSponsored);
   return (
@@ -124,7 +115,7 @@ export function HomePage() {
             <div className="flex flex-wrap gap-4">
               <Button
                 className="rounded-2xl h-14 px-10 font-black bg-orange-500 hover:bg-orange-600 shadow-glow"
-                onClick={() => setClaimVenue("General Inquiry")}
+                onClick={() => window.dispatchEvent(new CustomEvent('open-claim-modal', { detail: 'General Inquiry' }))}
               >
                 Claim Your Listing
               </Button>
@@ -142,41 +133,6 @@ export function HomePage() {
           </div>
         </section>
       </div>
-      <Dialog open={!!claimVenue} onOpenChange={() => setClaimVenue(null)}>
-        <DialogContent className="sm:max-w-[500px] rounded-3xl border-none shadow-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-black">Claim Your Venue</DialogTitle>
-            <DialogDescription>
-              Verify ownership of <b>{claimVenue}</b> to access the ROI Dashboard and create custom deals.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Business Email</label>
-              <Input placeholder="owner@venue.com" className="h-12 rounded-xl bg-secondary/50 border-none focus-visible:ring-primary/20" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Verification Method</label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" className="rounded-xl h-12 text-xs font-bold border-border/50">Phone Call</Button>
-                <Button variant="outline" className="rounded-xl h-12 text-xs font-bold border-border/50">Tax ID</Button>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 bg-secondary/50 p-4 rounded-2xl">
-              <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-              <p className="text-xs text-muted-foreground">Claimed venues receive 5,000 "Boost" points to promote their first event.</p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button className="w-full h-14 rounded-2xl bg-primary font-black shadow-lg" onClick={() => {
-              toast.success("Inquiry sent! Our verification team will reach out within 24 hours.");
-              setClaimVenue(null);
-            }}>
-              Submit Claim Request
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
