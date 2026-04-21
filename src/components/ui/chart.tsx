@@ -2,7 +2,6 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 import { cn } from "@/lib/utils"
-// Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
 export type ChartConfig = {
   [k in string]: {
@@ -86,16 +85,22 @@ ${colorConfig
   )
 }
 const ChartTooltip = RechartsPrimitive.Tooltip
+interface ChartTooltipContentProps extends React.ComponentProps<"div"> {
+  active?: boolean
+  payload?: any[]
+  label?: any
+  labelFormatter?: (label: any, payload: any[]) => React.ReactNode
+  labelClassName?: string
+  formatter?: (value: any, name: any, item: any, index: number, payload: any[]) => React.ReactNode
+  hideLabel?: boolean
+  hideIndicator?: boolean
+  indicator?: "line" | "dot" | "dashed"
+  nameKey?: string
+  labelKey?: string
+}
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  RechartsPrimitive.TooltipProps<any, any> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean
-      hideIndicator?: boolean
-      indicator?: "line" | "dot" | "dashed"
-      nameKey?: string
-      labelKey?: string
-    }
+  ChartTooltipContentProps
 >(
   (
     {
@@ -159,6 +164,7 @@ const ChartTooltipContent = React.forwardRef<
           "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
           className
         )}
+        {...props}
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
@@ -287,7 +293,6 @@ const ChartLegendContent = React.forwardRef<
   }
 )
 ChartLegendContent.displayName = "ChartLegend"
-// Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
   config: ChartConfig,
   payload: unknown,
@@ -300,22 +305,20 @@ function getPayloadConfigFromPayload(
     "payload" in payload &&
     typeof payload.payload === "object" &&
     payload.payload !== null
-      ? payload.payload
+      ? (payload as any).payload
       : undefined
   let configLabelKey: string = key
   if (
     key in payload &&
-    typeof payload[key as keyof typeof payload] === "string"
+    typeof (payload as any)[key] === "string"
   ) {
-    configLabelKey = payload[key as keyof typeof payload] as string
+    configLabelKey = (payload as any)[key] as string
   } else if (
     payloadPayload &&
     key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
+    typeof payloadPayload[key] === "string"
   ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string
+    configLabelKey = payloadPayload[key] as string
   }
   return configLabelKey in config
     ? config[configLabelKey]
