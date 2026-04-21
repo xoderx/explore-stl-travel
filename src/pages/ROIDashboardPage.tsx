@@ -28,7 +28,11 @@ export function ROIDashboardPage() {
       </div>
     );
   }
-  const footTrafficTotal = impactData?.footTraffic?.reduce((acc: number, curr: any) => acc + (curr.count || 0), 0) ?? 0;
+  const footTrafficTotal = (impactData?.footTraffic || []).reduce(
+    (acc: number, curr: any) => acc + (Number(curr?.count) || 0), 
+    0
+  );
+  const hasCategoryData = impactData?.categories && impactData.categories.length > 0;
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
       <div className="py-8 md:py-10 lg:py-12 space-y-8 animate-fade-in">
@@ -49,9 +53,6 @@ export function ROIDashboardPage() {
             <Button variant="outline" size="icon" className="rounded-2xl h-10 w-10 border-border/50 bg-secondary/30" onClick={refreshData}>
               <RefreshCw className={cn("w-4 h-4 text-muted-foreground", isRefetching && "animate-spin")} />
             </Button>
-            <div className="flex items-center gap-2 bg-secondary/50 p-2 rounded-2xl border border-border/40">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-            </div>
           </div>
         </header>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -100,26 +101,28 @@ export function ROIDashboardPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.3} />
-                  <XAxis 
-                    dataKey="day" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fontWeight: 700, fill: 'hsl(var(--muted-foreground))' }} 
+                  <XAxis
+                    dataKey="day"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fontWeight: 700, fill: 'hsl(var(--muted-foreground))' }}
                   />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fontWeight: 700, fill: 'hsl(var(--muted-foreground))' }} 
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fontWeight: 700, fill: 'hsl(var(--muted-foreground))' }}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(0,0,0,0.03)' }}
-                    contentStyle={{ 
-                      borderRadius: '16px', 
-                      border: 'none', 
-                      boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', 
+                    contentStyle={{
+                      borderRadius: '16px',
+                      border: 'none',
+                      boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)',
                       fontWeight: '800',
-                      fontSize: '12px'
+                      fontSize: '12px',
+                      backgroundColor: 'hsl(var(--background))'
                     }}
+                    labelStyle={{ color: 'hsl(var(--foreground))', marginBottom: '4px' }}
                   />
                   <Bar dataKey="count" fill="url(#barGradient)" radius={[8, 8, 0, 0]} />
                 </BarChart>
@@ -131,39 +134,50 @@ export function ROIDashboardPage() {
               <CardTitle className="text-xl font-black uppercase tracking-tight">Category Mix</CardTitle>
             </CardHeader>
             <CardContent className="h-[400px] p-8 flex flex-col justify-center">
-              <div className="relative">
-                <ResponsiveContainer width="100%" height={260}>
-                  <PieChart>
-                    <Pie
-                      data={impactData?.categories || []}
-                      innerRadius={70}
-                      outerRadius={95}
-                      paddingAngle={8}
-                      dataKey="value"
-                    >
-                      {impactData?.categories?.map((_: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <p className="text-2xl font-black leading-none">Mix</p>
-                  <p className="text-[10px] text-muted-foreground font-bold uppercase">Report</p>
-                </div>
-              </div>
-              <div className="mt-8 space-y-3">
-                {impactData?.categories?.map((cat: any, i: number) => (
-                  <div key={i} className="flex justify-between items-center bg-secondary/20 p-2 rounded-xl border border-border/5">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                      <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">{cat.name}</span>
+              {hasCategoryData ? (
+                <>
+                  <div className="relative">
+                    <ResponsiveContainer width="100%" height={260}>
+                      <PieChart>
+                        <Pie
+                          data={impactData.categories}
+                          innerRadius={70}
+                          outerRadius={95}
+                          paddingAngle={8}
+                          dataKey="value"
+                        >
+                          {impactData.categories.map((_: any, index: number) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip 
+                          contentStyle={{ borderRadius: '12px', border: 'none', fontWeight: 'bold' }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                      <p className="text-2xl font-black leading-none">Mix</p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase">Report</p>
                     </div>
-                    <span className="text-[11px] font-black">{cat.value}%</span>
                   </div>
-                ))}
-              </div>
+                  <div className="mt-8 space-y-3">
+                    {impactData.categories.map((cat: any, i: number) => (
+                      <div key={i} className="flex justify-between items-center bg-secondary/20 p-2 rounded-xl border border-border/5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">{cat.name}</span>
+                        </div>
+                        <span className="text-[11px] font-black">{cat.value}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center space-y-4 opacity-40 py-12">
+                   <Target className="w-12 h-12" />
+                   <p className="text-xs font-black uppercase tracking-widest text-center">No Category Data <br /> For This District</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
