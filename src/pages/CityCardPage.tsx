@@ -44,8 +44,8 @@ export function CityCardPage() {
         {isLoading ? (
           <Skeleton className="w-full aspect-[1.6/1] rounded-3xl" />
         ) : (
-          <div 
-            className="relative aspect-[1.6/1] w-full rounded-3xl bg-gradient-to-br from-slate-900 via-neutral-900 to-black p-6 text-white shadow-2xl overflow-hidden border border-white/10 group cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99]" 
+          <div
+            className="relative aspect-[1.6/1] w-full rounded-3xl bg-gradient-to-br from-slate-900 via-neutral-900 to-black p-6 text-white shadow-2xl overflow-hidden border border-white/10 group cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99]"
             onClick={() => setShowHistory(!showHistory)}
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/15 blur-[100px] pointer-events-none group-hover:bg-orange-500/25 transition-colors duration-500" />
@@ -128,8 +128,8 @@ export function CityCardPage() {
         </div>
       </section>
       <section className="space-y-4">
-        <div 
-          className="flex justify-between items-center cursor-pointer group px-1" 
+        <div
+          className="flex justify-between items-center cursor-pointer group px-1"
           onClick={() => setShowHistory(!showHistory)}
         >
           <h3 className="text-xl font-bold flex items-center gap-2">
@@ -147,7 +147,7 @@ export function CityCardPage() {
                 <div key={tx.id} className="flex justify-between items-center p-4 rounded-2xl hover:bg-background/80 transition-all duration-200">
                   <div className="flex gap-3 items-center">
                     <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center shadow-sm", 
+                      "w-10 h-10 rounded-full flex items-center justify-center shadow-sm",
                       tx.amount > 0 ? "bg-green-500/10 text-green-600" : "bg-orange-500/10 text-orange-600"
                     )}>
                       {tx.amount > 0 ? <CheckCircle2 className="w-5 h-5" /> : <Gift className="w-5 h-5" />}
