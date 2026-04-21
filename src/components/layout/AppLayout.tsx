@@ -33,18 +33,20 @@ export function AppLayout({ children, container = false, className, contentClass
         className,
         getDistrictClass()
       )}>
-        {/* Ferguson-specific subtle overlay */}
+        {/* Ferguson-specific subtle overlay - pointer-events-none ensures card interactivity */}
         {currentDistrict === 'ferguson' && (
           <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.03),transparent_70%)] z-0" />
         )}
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-[60]">
+        {/* District Switcher Z-Index optimization */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-[40]">
           <DistrictSwitcher />
         </div>
         <main className={cn(
           "flex-1 w-full flex flex-col relative z-10",
           isMobile ? "pb-20" : "",
-          container ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 lg:py-12" : ""
-        , contentClassName)}>
+          container ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 lg:py-12" : "",
+          contentClassName
+        )}>
           {children}
         </main>
         {isMobile && <MobileNav />}

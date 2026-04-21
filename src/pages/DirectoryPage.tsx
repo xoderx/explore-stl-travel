@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/lib/api-client';
@@ -10,10 +11,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useDistrictStore } from '@/store/use-district-store';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/lib/tracking';
 export function DirectoryPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryParam = searchParams.get('q') || '';
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(queryParam);
   const currentDistrict = useDistrictStore(s => s.currentDistrict);
+  // Sync state with URL and reset filters on district change
+  useEffect(() => {
+    setSelectedFilter('All');
+    const q = searchParams.get('q') || '';
+    setSearch(q);
+  }, [currentDistrict, searchParams]);
   const filters = useMemo(() => {
     switch (currentDistrict) {
       case 'delmar': return ['All', 'Food', 'Nightlife', 'Music'];
@@ -30,9 +40,18 @@ export function DirectoryPage() {
   const filtered = listings?.filter(l => l.district === currentDistrict).filter(l => {
     const matchesFilter = selectedFilter === 'All' || l.category === selectedFilter;
     const matchesSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||
-                          l.category.toLowerCase().includes(search.toLowerCase());
+                          l.category.toLowerCase().includes(search.toLowerCase()) ||
+                          l.description.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    if (!val) {
+      setSearchParams({}, { replace: true });
+    } else {
+      setSearchParams({ q: val }, { replace: true });
+    }
+  };
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="space-y-6">
@@ -46,14 +65,14 @@ export function DirectoryPage() {
             placeholder="Search venues, cuisines, or locations..."
             className="pl-12 pr-12 h-14 bg-secondary/40 border-none rounded-2xl focus-visible:ring-2 ring-primary/20 text-lg"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
           {search && (
             <Button
               variant="ghost"
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 hover:bg-transparent"
-              onClick={() => setSearch('')}
+              onClick={() => handleSearchChange('')}
             >
               <X className="w-5 h-5 text-muted-foreground hover:text-foreground" />
             </Button>
@@ -66,7 +85,10 @@ export function DirectoryPage() {
           {filters.map((f) => (
             <Badge
               key={f}
-              onClick={() => setSelectedFilter(f)}
+              onClick={() => {
+                setSelectedFilter(f);
+                trackEvent('directory_filter_click', { filter: f, district: currentDistrict });
+              }}
               className={cn(
                 "px-5 py-2.5 rounded-xl cursor-pointer transition-all border-none text-sm font-bold whitespace-nowrap",
                 selectedFilter === f
@@ -107,7 +129,7 @@ export function DirectoryPage() {
             <div className="col-span-full py-32 text-center space-y-4">
               <Search className="w-8 h-8 text-muted-foreground mx-auto" />
               <h3 className="text-xl font-bold">No results found in {currentDistrict.toUpperCase()}</h3>
-              <Button variant="link" onClick={() => { setSearch(''); setSelectedFilter('All'); }}>
+              <Button variant="link" onClick={() => { handleSearchChange(''); setSelectedFilter('All'); }}>
                 Clear all filters
               </Button>
             </div>
