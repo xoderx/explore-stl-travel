@@ -1,6 +1,6 @@
 # Cloudflare Workers React Full-Stack Template
 
-[![[cloudflarebutton]]](https://deploy.workers.cloudflare.com)
+[![[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/xoderx/explore-stl-travel)]](https://deploy.workers.cloudflare.com)
 
 A production-ready full-stack starter template for building applications with Cloudflare Workers and React. Features a modern UI with shadcn/ui, Tailwind CSS, and Durable Objects for scalable, SQLite-backed data persistence. Includes users, chat boards, and real-time messaging out of the box.
 
@@ -115,7 +115,7 @@ bun install -g wrangler
 wrangler deploy
 ```
 
-**[cloudflarebutton]**
+**[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/xoderx/explore-stl-travel)**
 
 Configuration in `wrangler.jsonc`:
 - Assets served as SPA.
