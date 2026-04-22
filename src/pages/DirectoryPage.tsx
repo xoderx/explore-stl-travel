@@ -18,12 +18,15 @@ export function DirectoryPage() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [search, setSearch] = useState(queryParam);
   const currentDistrict = useDistrictStore(s => s.currentDistrict);
-  // Sync state with URL and reset filters on district change
+  // Reset filters ONLY when district changes
   useEffect(() => {
     setSelectedFilter('All');
+  }, [currentDistrict]);
+  // Sync search state with URL parameter 'q'
+  useEffect(() => {
     const q = searchParams.get('q') || '';
     setSearch(q);
-  }, [currentDistrict, searchParams]);
+  }, [searchParams]);
   const filters = useMemo(() => {
     switch (currentDistrict) {
       case 'delmar': return ['All', 'Food', 'Nightlife', 'Music'];

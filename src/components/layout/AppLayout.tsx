@@ -65,21 +65,18 @@ export function AppLayout({
       {!isMobile && <AppSidebar />}
       <SidebarInset
         className={cn(
-          "relative transition-colors duration-500 min-h-screen bg-background",
+          "relative transition-colors duration-700 min-h-screen bg-background flex flex-col",
           className,
           getDistrictClass()
         )}
       >
-        {currentDistrict === "ferguson" && (
-          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.03),transparent_70%)] z-0" />
-        )}
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-[40]">
+        <div className="fixed top-4 right-4 flex items-center gap-2 z-[40]">
           <DistrictSwitcher />
         </div>
         <main
           className={cn(
             "flex-1 w-full flex flex-col relative z-10",
-            isMobile ? "pb-20" : "",
+            isMobile ? "pb-24 pt-16" : "pt-0",
             container ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 lg:py-12" : "",
             contentClassName
           )}
@@ -88,7 +85,7 @@ export function AppLayout({
         </main>
         {isMobile && <MobileNav />}
         <Dialog open={!!claimVenue} onOpenChange={() => setClaimVenue(null)}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl border-none shadow-2xl">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl border-none shadow-2xl overflow-hidden">
             <DialogHeader>
               <DialogTitle className="text-2xl font-black">
                 Claim Your Venue
@@ -135,7 +132,7 @@ export function AppLayout({
                 </p>
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="sm:justify-start">
               <Button
                 className="w-full h-14 rounded-2xl bg-primary font-black shadow-lg"
                 onClick={handleClaimSubmit}

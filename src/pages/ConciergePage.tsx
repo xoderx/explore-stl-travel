@@ -44,8 +44,8 @@ export function ConciergePage() {
     }, 1500);
   };
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] md:h-screen bg-background relative max-w-3xl mx-auto border-x shadow-2xl overflow-hidden">
-      <header className="p-4 border-b flex items-center justify-between bg-background/80 backdrop-blur-lg sticky top-0 z-10">
+    <div className="flex flex-col h-full bg-background relative max-w-3xl mx-auto md:border-x shadow-2xl overflow-hidden">
+      <header className="p-4 border-b flex items-center justify-between bg-background/80 backdrop-blur-lg sticky top-0 z-20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
             <Bot className="w-6 h-6" />
@@ -62,35 +62,37 @@ export function ConciergePage() {
           <Sparkles className="w-5 h-5 text-orange-400" />
         </div>
       </header>
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-6 pb-4">
-          {messages.map((m) => (
-            <div key={m.id} className={cn(
-              "flex w-full max-w-[85%] animate-scale-in",
-              m.role === 'user' ? "ml-auto justify-end" : "justify-start"
-            )}>
-              <div className={cn(
-                "rounded-2xl px-4 py-3 text-sm shadow-sm leading-relaxed",
-                m.role === 'user'
-                  ? "bg-orange-500 text-white rounded-br-none"
-                  : "bg-secondary text-foreground rounded-bl-none border border-border/50"
+      <div className="flex-1 overflow-hidden relative">
+        <ScrollArea className="h-full w-full">
+          <div className="p-4 space-y-6 pb-20">
+            {messages.map((m) => (
+              <div key={m.id} className={cn(
+                "flex w-full max-w-[85%] animate-scale-in",
+                m.role === 'user' ? "ml-auto justify-end" : "justify-start"
               )}>
-                {m.content}
+                <div className={cn(
+                  "rounded-2xl px-4 py-3 text-sm shadow-sm leading-relaxed",
+                  m.role === 'user'
+                    ? "bg-orange-500 text-white rounded-br-none"
+                    : "bg-secondary text-foreground rounded-bl-none border border-border/50"
+                )}>
+                  {m.content}
+                </div>
               </div>
-            </div>
-          ))}
-          {isTyping && (
-            <div className="flex justify-start animate-scale-in">
-              <div className="bg-secondary text-foreground rounded-2xl rounded-bl-none px-4 py-3 border border-border/50 flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
-                <span className="text-xs font-medium text-muted-foreground italic">Thinking...</span>
+            ))}
+            {isTyping && (
+              <div className="flex justify-start animate-scale-in">
+                <div className="bg-secondary text-foreground rounded-2xl rounded-bl-none px-4 py-3 border border-border/50 flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
+                  <span className="text-xs font-medium text-muted-foreground italic">Thinking...</span>
+                </div>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-      <footer className="p-4 border-t bg-background">
+            )}
+            <div ref={messagesEndRef} className="h-4" />
+          </div>
+        </ScrollArea>
+      </div>
+      <footer className="p-4 border-t bg-background sticky bottom-0 z-20">
         <div className="flex gap-2 bg-secondary/50 p-1.5 rounded-2xl items-center focus-within:ring-2 ring-orange-500/20 transition-all border border-transparent focus-within:border-orange-500/20">
           <Input
             placeholder="Ask anything about STL..."
